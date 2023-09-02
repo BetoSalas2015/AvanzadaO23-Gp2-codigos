@@ -26,11 +26,46 @@ void insert(char dato)
 		printf("No hay memoria. \n");
 		exit(1);
 	}
+	nuevo -> info = dato;
+	nuevo -> sig = NULL;
+	if( raiz == NULL )
+	{
+		raiz = nuevo;
+	}
+	else
+	{
+		nodo *recorre = raiz;
+		while( recorre ->sig != NULL)
+			recorre = recorre ->sig; 
+		recorre -> sig = nuevo;
+	}
+}
+
+void imprimeLista()
+{
+	nodo *recorre = raiz;
+	while( recorre != NULL)
+	{
+		printf("%c, ", recorre ->info);
+		recorre = recorre ->sig; 
+	}
+	putchar('\n');
 }
 
 int main()
 {
-	nodo Variable;
+	imprimeLista();
+
+	insert('R');
+	insert('o');
+	insert('b');
+	insert('e');
+	insert('r');
+	insert('t');
+	insert('o');
+
+	imprimeLista();
+
 	pausa;
 	return 0;
 }
