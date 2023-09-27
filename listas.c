@@ -7,9 +7,12 @@
 #define NL putchar('\n')
 
 //  Prototipos
-void insert(char dato);
-void insert1(char dato);
-void insertn(char dato, int pos);
+nodo *insert(nodo *raiz, char dato);
+nodo *insert1(nodo *raiz, char dato);
+nodo *insert1(nodo *raiz, char dato);
+nodo *remueven(nodo *raiz, char *dato, int pos);
+nodo *remueve1(nodo *raiz, char *dato);
+nodo *remueve(nodo *raiz, char *dato);
 
 struct Nodo 
 {
@@ -19,10 +22,8 @@ struct Nodo
 
 typedef struct Nodo nodo;
 
-nodo *raiz = NULL;
-
 ///  Primitivas
-void insert(char dato)
+nodo *insert(nodo *raiz, char dato)
 {
 	nodo *nuevo = NULL;
 	nuevo = (nodo *) malloc( sizeof( nodo ) );
@@ -44,9 +45,10 @@ void insert(char dato)
 			recorre = recorre ->sig; 
 		recorre -> sig = nuevo;
 	}
+	return raiz;
 }
 
-void insert1(char dato)
+nodo *insert1(nodo *raiz, char dato)
 {
 	nodo *nuevo = NULL;
 	nuevo = (nodo *) malloc( sizeof( nodo ) );
@@ -60,9 +62,10 @@ void insert1(char dato)
 
 	nuevo ->sig = raiz;
 	raiz = nuevo;
+	return raiz;
 }
 
-void insertn(char dato, int pos)
+nodo *insertn(nodo *raiz, char dato, int pos)
 {
 	nodo *nuevo = NULL;
 	nuevo = (nodo *) malloc( sizeof( nodo ) );
@@ -94,12 +97,13 @@ void insertn(char dato, int pos)
 		nuevo ->sig = recorre ->sig;
 		recorre -> sig = nuevo;
 	}
+	return raiz;
 }
 
 
-char remueve(void)
+nodo *remueve(nodo *raiz, char *dato)
 {
-	char dato;
+
 	nodo *anterior = NULL, *siguiente = NULL;
 	if(raiz == NULL)
 	{
@@ -111,9 +115,9 @@ char remueve(void)
 	if(anterior ->sig == NULL)
 	{
 		raiz = NULL;
-		dato = anterior ->info;
+		*dato = anterior ->info;
 		free(anterior);
-		return dato;
+		return raiz;
 	}
 	else
 	{ 
@@ -124,13 +128,73 @@ char remueve(void)
 			siguiente = siguiente ->sig;
 		}
 		anterior -> sig = NULL;
-		dato = siguiente ->info;
+		*dato = siguiente ->info;
 		free(siguiente);
-		return dato;
+		return raiz;
+	}
+
+}
+
+nodo *remueven(nodo *raiz, char *dato, int pos)
+{
+	nodo *anterior = NULL, *siguiente = NULL;
+	if(raiz == NULL)
+	{
+		printf("Lista vacía, no ha nada que eliminar.\n");
+		pausa;
+		return NULL;
+	}
+	anterior = raiz;
+	if(pos == 1)
+	{
+		raiz = raiz ->sig;
+		*dato = anterior ->info;
+		free(anterior);
+		return raiz;
+	}
+	else
+	{ 
+		int cont = 1;
+		siguiente = anterior ->sig;
+		while(siguiente ->sig != NULL && cont < pos - 1)
+		{
+			anterior = siguiente;
+			siguiente = siguiente ->sig;
+			cont++;
+		}
+		if(siguiente ->sig == NULL && cont < pos)
+		{
+			printf("No se puede eliminar el elemento.\n");
+			pausa;
+			return '\0';
+		}
+		anterior -> sig = siguiente->sig;
+		*dato = siguiente ->info;
+		free(siguiente);
+		return raiz;
 	}
 }
 
-void imprimeLista()
+nodo *remueve1(nodo *raiz, char *dato)
+{
+	nodo *anterior = NULL;
+	if(raiz == NULL)
+	{
+		printf("Lista vacía, no ha nada que eliminar.\n");
+		pausa;
+		return 0;
+	}
+	anterior = raiz;
+	raiz = raiz ->sig;				// raiz = anterior -> sig
+	*dato = anterior ->info;
+	free(anterior);
+	return raiz;
+}
+	
+
+
+
+void imprimeLista(nodo *raiz)
 {
 	nodo *recorre = raiz;
 	while( recorre != NULL)
@@ -143,22 +207,41 @@ void imprimeLista()
 
 int main()
 {
-	imprimeLista();
+	//int javierHernandez;
+	//int *chicharito;		// alias 
+	//chicharito = &javierHernandez
+	//*chicharito = 50;
+	char letra;
+	nodo *nombre = NULL, *apellido = NULL;
+	imprimeLista(nombre);
+	
 
-	insert('R');
-	insert('o');
-	insert('b');
-	insert('e');
-	insert('r');
-	insert('t');
-	insert('o');
+	nombre = insert(nombre,'R');
+	nombre = insert(nombre,'o');
+	nombre = insert(nombre,'b');
+	nombre = insert(nombre,'e');
+	nombre = insert(nombre,'r');
+	nombre = insert(nombre,'t');
+	nombre = insert(nombre,'o');
 
-	imprimeLista();
+	imprimeLista(nombre);
+	
+	apellido = insert1(apellido, 'S');
+	apellido = insert1(apellido, 'a');
+	apellido = insert1(apellido, 'l');
+	apellido = insert1(apellido, 'a');
+	apellido = insert1(apellido, 'z');
+	apellido = insert1(apellido, 'a');
+	apellido = insert1(apellido, 'r');
 
-	printf("Lo que salio de la lista ligada: %c\n", remueve() );
-	printf("Lo que salio de la lista ligada: %c\n", remueve() );
+	imprimeLista(apellido);
 
-	imprimeLista();
+	nombre = remueve1(nombre, &letra);
+
+	printf("El dato que salió fue %c\n", letra);
+
+	imprimeLista(nombre);
+	
 
 	pausa;
 	return 0;
